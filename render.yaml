@@ -1,0 +1,32 @@
+services:
+  # ── HawkNet-Ai Backend API (FastAPI) ───────────────────────────
+  - type: web
+    name: hawknet-ai-backend
+    runtime: python
+    buildCommand: pip install --extra-index-url https://download.pytorch.org/whl/cpu torch torchvision && pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: PYTHONPATH
+        value: ./backend
+      - key: APP_NAME
+        value: HawkNet-Ai
+      - key: ENVIRONMENT
+        value: production
+      - key: CORS_ORIGINS
+        value: '*'
+      - key: DATABASE_URL
+        value: sqlite:////tmp/app.db
+      - key: RATE_LIMIT_ENABLED
+        value: 'true'
+
+  # ── HawkNet-Ai Frontend SPA (React / Vite) ──────────────────────
+  - type: web
+    name: hawknet-ai-frontend
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
