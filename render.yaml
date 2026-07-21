@@ -3,12 +3,13 @@ services:
   - type: web
     name: hawknet-ai-backend
     runtime: python
-    buildCommand: pip install --extra-index-url https://download.pytorch.org/whl/cpu torch torchvision && pip install -r backend/requirements.txt
-    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: backend
+    buildCommand: pip install --no-cache-dir -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     plan: free
     envVars:
       - key: PYTHONPATH
-        value: ./backend
+        value: .
       - key: APP_NAME
         value: HawkNet-Ai
       - key: ENVIRONMENT
@@ -19,13 +20,16 @@ services:
         value: sqlite:////tmp/app.db
       - key: RATE_LIMIT_ENABLED
         value: 'true'
+      - key: PYTHON_VERSION
+        value: 3.11.9
 
   # ── HawkNet-Ai Frontend SPA (React / Vite) ──────────────────────
   - type: web
     name: hawknet-ai-frontend
     runtime: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
     routes:
       - type: rewrite
         source: /*
