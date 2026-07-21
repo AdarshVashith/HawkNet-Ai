@@ -24,15 +24,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
   })
 
-  const contentType = response.headers.get('content-type') || ''
-
   if (!response.ok) {
     const text = await response.text()
     throw new Error(text || `Request failed (${response.status})`)
-  }
-
-  if (!contentType.includes('application/json')) {
-    throw new Error(`API endpoint returned non-JSON response. Check backend connection at ${base}${path}`)
   }
 
   return response.json() as Promise<T>
@@ -85,8 +79,21 @@ export type CurrencyScanResponse = {
 }
 
 // ── Health ─────────────────────────────────────────────────────────
-export function getHealth() {
-  return request<HealthResponse>('/health')
+export async function getHealth(): Promise<HealthResponse> {
+  const base = getApiBase()
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 8000)
+  try {
+    const response = await fetch(`${base}/health`, { signal: controller.signal })
+    clearTimeout(timeout)
+    if (!response.ok) throw new Error(`Health check failed: ${response.status}`)
+    const data = await response.json()
+    if (data?.status === 'ok') return data as HealthResponse
+    throw new Error('Unexpected health response')
+  } catch (e) {
+    clearTimeout(timeout)
+    throw e
+  }
 }
 
 // ── Scam Detection ─────────────────────────────────────────────────
