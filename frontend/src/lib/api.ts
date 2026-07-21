@@ -1,11 +1,15 @@
+const PRODUCTION_BACKEND = 'https://hawknet-ai-backend.onrender.com'
+
 function getApiBase(): string {
+  // 1. Explicitly set via Vite env var (highest priority)
   if (import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')
   }
+  // 2. Running on Render static hosting → always use production backend
   if (typeof window !== 'undefined' && window.location.hostname.endsWith('onrender.com')) {
-    const backendHost = window.location.hostname.replace(/hawknet-ai-frontend/g, 'hawknet-ai-backend')
-    return `${window.location.protocol}//${backendHost}`
+    return PRODUCTION_BACKEND
   }
+  // 3. Local development — proxy through Vite dev server
   return ''
 }
 
