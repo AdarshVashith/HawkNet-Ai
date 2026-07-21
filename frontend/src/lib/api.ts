@@ -84,7 +84,7 @@ export async function getHealth(): Promise<HealthResponse> {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 45000)
   try {
-    const response = await fetch(`${base}/health`, { signal: controller.signal })
+    const response = await fetch(`${base}/api/v1/status`, { signal: controller.signal })
     clearTimeout(timeout)
     if (!response.ok) throw new Error(`Health check failed: ${response.status}`)
     const data = await response.json()

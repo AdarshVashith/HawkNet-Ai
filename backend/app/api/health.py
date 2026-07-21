@@ -37,7 +37,7 @@ def increment(counter: str, amount: int = 1) -> None:
             _counters[counter] += amount
 
 
-@router.get("/health")
+@router.get("/api/v1/status")
 def health_check() -> dict[str, str]:
     """Return service liveness information."""
     settings = get_settings()
@@ -49,7 +49,7 @@ def health_check() -> dict[str, str]:
     }
 
 
-@router.get("/health/ready")
+@router.get("/api/v1/status/ready")
 def readiness_check(db: Annotated[Session, Depends(get_db)]) -> dict[str, str]:
     """Readiness probe — verifies the database is reachable.
 
