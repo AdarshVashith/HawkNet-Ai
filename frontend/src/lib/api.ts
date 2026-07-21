@@ -9,10 +9,10 @@ function getApiBase(): string {
   return ''
 }
 
-const API_BASE = getApiBase()
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
+  const base = getApiBase()
+  const response = await fetch(`${base}${path}`, {
     headers: {
       'Content-Type': 'application/json',
       ...(init?.headers || {}),
@@ -20,9 +20,15 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
   })
 
+  const contentType = response.headers.get('content-type') || ''
+
   if (!response.ok) {
     const text = await response.text()
     throw new Error(text || `Request failed (${response.status})`)
+  }
+
+  if (!contentType.includes('application/json')) {
+    throw new Error(`API endpoint returned non-JSON response. Check backend connection at ${base}${path}`)
   }
 
   return response.json() as Promise<T>
@@ -119,9 +125,10 @@ export function analyzeCounterfeit(productName: string, brand: string, price: nu
 
 /** Scan an uploaded banknote image for counterfeit security cues */
 export async function scanCurrencyNote(file: File): Promise<CurrencyScanResponse> {
+  const base = getApiBase()
   const formData = new FormData()
   formData.append('file', file)
-  const response = await fetch(`${API_BASE}/api/counterfeit/scan`, {
+  const response = await fetch(`${base}/api/counterfeit/scan`, {
     method: 'POST',
     body: formData,
   })
@@ -414,7 +421,8 @@ export function getFIRDraft(draftId: string) {
 }
 
 export async function exportFIRDraft(draftId: string, filename: string): Promise<void> {
-  const response = await fetch(`${API_BASE}/api/fir-agent/draft/${draftId}/export`)
+  const base = getApiBase()
+  const response = await fetch(`${base}/api/fir-agent/draft/${draftId}/export`)
   if (!response.ok) throw new Error(`Export failed (${response.status})`)
   const blob = await response.blob()
   const url = URL.createObjectURL(blob)
