@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+backend/db/*.db
+backend/db/*.db-journal
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Sample / downloaded data (keep structure + loader; ignore bulk dumps)
+data/**/*.csv
+data/**/*.json
+data/**/raw/**
+!data/**/.gitkeep
+!data/**/README.md
+!data/**/load.py
+!data/**/requirements.txt
+# combined.jsonl can be large — keep local; re-run load.py to regenerate
+data/**/combined.jsonl
+data/alerts/alerts.jsonl
+# Currency CV images (keep folders + README; ignore bulk photos / synthetic outputs)
+data/currency/genuine/**
+data/currency/counterfeit/**
+!data/currency/**/.gitkeep
+!data/currency/README.md
+# manifest.csv is already covered by data/**/*.csv
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Docker
+*.log
+
+# Keep fraud_graph synthetic CSVs trackable for demo
+!data/fraud_graph/*.csv
+!data/fraud_graph/generate.py
+!data/fraud_graph/README.md

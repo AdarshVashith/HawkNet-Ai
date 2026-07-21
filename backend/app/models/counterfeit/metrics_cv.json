@@ -1,0 +1,54 @@
+{
+  "model_version": "mobilenetv2-currency-0.1.0",
+  "backend": "torchvision_mobilenet_v2",
+  "model_path": "/home/user/digital-public-safety-platform/backend/app/models/counterfeit/currency_model.pt",
+  "train_size": 12,
+  "test_size": 6,
+  "metrics": {
+    "accuracy": 1.0,
+    "precision_counterfeit": 1.0,
+    "recall_counterfeit": 1.0,
+    "confusion_matrix": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        5
+      ]
+    ]
+  },
+  "classification_report": "              precision    recall  f1-score   support\n\n     genuine     1.0000    1.0000    1.0000         1\n counterfeit     1.0000    1.0000    1.0000         5\n\n    accuracy                         1.0000         6\n   macro avg     1.0000    1.0000    1.0000         6\nweighted avg     1.0000    1.0000    1.0000         6\n",
+  "per_defect_breakdown": {
+    "latent_image_remove": {
+      "total": 6,
+      "caught": 6,
+      "missed": 0,
+      "catch_rate": 1.0
+    },
+    "microprint_blur": {
+      "total": 6,
+      "caught": 6,
+      "missed": 0,
+      "catch_rate": 1.0
+    },
+    "security_thread_break": {
+      "total": 6,
+      "caught": 6,
+      "missed": 0,
+      "catch_rate": 1.0
+    },
+    "serial_number_distort": {
+      "total": 6,
+      "caught": 6,
+      "missed": 0,
+      "catch_rate": 1.0
+    }
+  },
+  "disclaimer": "Trained on synthetic proxy counterfeit images for demo \u2014 not real counterfeit specimens.",
+  "uncertain_band": {
+    "low": 0.4,
+    "high": 0.6
+  }
+}

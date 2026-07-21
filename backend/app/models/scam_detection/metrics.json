@@ -1,0 +1,33 @@
+{
+  "model_version": "sklearn-handcrafted+tfidf-0.1.0",
+  "model_kind": "logreg",
+  "data_path": "../data/scam_transcripts/transcripts.jsonl",
+  "n_samples": 13387,
+  "metrics": {
+    "precision_scam": 0.948,
+    "recall_scam": 0.9854469854469855,
+    "f1_scam": 0.9663608562691132,
+    "false_positive_rate": 0.011834319526627219,
+    "confusion_matrix": {
+      "labels": [
+        "normal(0)",
+        "scam(1)"
+      ],
+      "matrix": [
+        [
+          2171,
+          26
+        ],
+        [
+          7,
+          474
+        ]
+      ],
+      "tn": 2171,
+      "fp": 26,
+      "fn": 7,
+      "tp": 474
+    }
+  },
+  "classification_report": "              precision    recall  f1-score   support\n\n      normal     0.9968    0.9882    0.9925      2197\n        scam     0.9480    0.9854    0.9664       481\n\n    accuracy                         0.9877      2678\n   macro avg     0.9724    0.9868    0.9794      2678\nweighted avg     0.9880    0.9877    0.9878      2678\n"
+}
