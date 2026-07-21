@@ -128,24 +128,39 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     let mounted = true
-    function check() {
-      getHealth()
-        .then((data) => {
-          if (mounted) { setHealth(data); setHealthStatus('ok') }
-        })
-        .catch(() => {
-          if (mounted) { setHealth(null); setHealthStatus('error') }
-        })
+    let retryCount = 0
+    const MAX_RETRIES = 8
+    const RETRY_DELAYS = [1000, 2000, 4000, 8000, 15000, 20000, 30000, 30000]
+
+    async function check() {
+      try {
+        const data = await getHealth()
+        if (mounted) {
+          setHealth(data)
+          setHealthStatus('ok')
+          retryCount = 0
+          // Keep polling every 30s after success
+          setTimeout(check, 30000)
+        }
+      } catch {
+        if (!mounted) return
+        setHealthStatus('error')
+        if (retryCount < MAX_RETRIES) {
+          const delay = RETRY_DELAYS[retryCount] ?? 30000
+          retryCount++
+          setTimeout(check, delay)
+        } else {
+          // Give up retrying fast, but still check every 60s
+          setTimeout(check, 60000)
+        }
+      }
     }
 
     setHealthStatus('loading')
     check()
-    const interval = setInterval(check, 10000)
-    return () => {
-      mounted = false
-      clearInterval(interval)
-    }
+    return () => { mounted = false }
   }, [])
+
 
   useEffect(() => { setMobileOpen(false) }, [location.pathname])
 

@@ -82,7 +82,7 @@ export type CurrencyScanResponse = {
 export async function getHealth(): Promise<HealthResponse> {
   const base = getApiBase()
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 8000)
+  const timeout = setTimeout(() => controller.abort(), 45000)
   try {
     const response = await fetch(`${base}/health`, { signal: controller.signal })
     clearTimeout(timeout)
