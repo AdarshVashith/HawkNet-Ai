@@ -14,6 +14,8 @@ services:
         value: HawkNet-Ai
       - key: ENVIRONMENT
         value: production
+      - key: JWT_SECRET
+        value: hawknet-ai-production-jwt-secret-key-9823479238479238
       - key: CORS_ORIGINS
         value: '*'
       - key: DATABASE_URL
