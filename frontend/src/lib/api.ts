@@ -1,4 +1,15 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || ''
+function getApiBase(): string {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')
+  }
+  if (typeof window !== 'undefined' && window.location.hostname.endsWith('onrender.com')) {
+    const backendHost = window.location.hostname.replace(/hawknet-ai-frontend/g, 'hawknet-ai-backend')
+    return `${window.location.protocol}//${backendHost}`
+  }
+  return ''
+}
+
+const API_BASE = getApiBase()
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
