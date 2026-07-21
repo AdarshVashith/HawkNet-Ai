@@ -127,10 +127,24 @@ export default function Layout({ children }: LayoutProps) {
   }, [theme])
 
   useEffect(() => {
+    let mounted = true
+    function check() {
+      getHealth()
+        .then((data) => {
+          if (mounted) { setHealth(data); setHealthStatus('ok') }
+        })
+        .catch(() => {
+          if (mounted) { setHealth(null); setHealthStatus('error') }
+        })
+    }
+
     setHealthStatus('loading')
-    getHealth()
-      .then((data) => { setHealth(data); setHealthStatus('ok') })
-      .catch(() => { setHealth(null); setHealthStatus('error') })
+    check()
+    const interval = setInterval(check, 10000)
+    return () => {
+      mounted = false
+      clearInterval(interval)
+    }
   }, [])
 
   useEffect(() => { setMobileOpen(false) }, [location.pathname])
