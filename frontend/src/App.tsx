@@ -8,6 +8,7 @@ import Geospatial from './pages/Geospatial'
 import CitizenShield from './pages/CitizenShield'
 import AuditLog from './pages/AuditLog'
 
+// HawkNet-Ai Command Center App v0.1.0
 export default function App() {
   return (
     <BrowserRouter>
